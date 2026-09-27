@@ -644,7 +644,7 @@ export default function App() {
       </main>
 
       <footer className="w-full text-center py-6 text-xs text-gray-400 dark:text-gray-500 z-10">
-        Made with ❤️ for special celebrations
+        Made with ❤️ for special celebrations 
       </footer>
 
       {/* Wishes Customization Modal */}
