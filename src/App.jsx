@@ -690,20 +690,22 @@ export default function App() {
                       value={recipientName}
                       onChange={(e) => setRecipientName(e.target.value)}
                       className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
-                      placeholder="e.g. Sarah"
+                      disabled
+                      placeholder=""
                     />
                   </div>
 
                   <div>
                     <label className="block text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-1.5">
-                      Your Name / From (Optional)
+                      Your Name / From
                     </label>
                     <input
                       type="text"
                       value={senderName}
                       onChange={(e) => setSenderName(e.target.value)}
                       className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
-                      placeholder="e.g. Alex"
+                      disabled
+                      placeholder=""
                     />
                   </div>
 
