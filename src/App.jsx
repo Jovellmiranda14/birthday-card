@@ -411,6 +411,80 @@ const PeonyFlower = () => {
   );
 };
 
+const LilyFlower = () => {
+  return (
+    <div className="relative w-full h-full flex items-center justify-center filter drop-shadow-lg">
+      <svg
+        viewBox="0 0 300 350"
+        className="w-48 h-48 md:w-64 md:h-64 object-contain select-none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <linearGradient id="lilyPetal" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#fff7ed" />
+            <stop offset="55%" stopColor="#fbcfe8" />
+            <stop offset="100%" stopColor="#ec4899" />
+          </linearGradient>
+          <linearGradient id="lilyStem" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#166534" />
+            <stop offset="50%" stopColor="#4ade80" />
+            <stop offset="100%" stopColor="#166534" />
+          </linearGradient>
+        </defs>
+
+        <path
+          d="M150 175 Q148 260 145 330"
+          stroke="url(#lilyStem)"
+          strokeWidth="7"
+          strokeLinecap="round"
+          fill="none"
+        />
+        <path
+          d="M148 255 C105 238 78 205 58 166 C92 179 125 208 148 242 Z"
+          fill="#2e7d32"
+        />
+        <path
+          d="M148 270 C180 251 209 220 232 180 C205 195 174 225 147 258 Z"
+          fill="#43a047"
+        />
+
+        <g>
+          <path
+            d="M150 164 C111 145 70 104 76 56 C119 67 143 105 150 143 C157 105 181 67 224 56 C230 104 189 145 150 164 Z"
+            fill="url(#lilyPetal)"
+          />
+          <path
+            d="M150 164 C124 129 119 82 150 30 C181 82 176 129 150 164 Z"
+            fill="#f9a8d4"
+          />
+          <path
+            d="M150 164 C137 130 140 96 150 66 C160 96 163 130 150 164 Z"
+            fill="#fff1f2"
+          />
+          <path
+            d="M150 164 C119 153 86 126 82 91 C113 99 138 122 150 151 C162 122 187 99 218 91 C214 126 181 153 150 164 Z"
+            fill="#f472b6"
+            opacity="0.8"
+          />
+        </g>
+
+        {[-20, -10, 0, 10, 20].map((offset) => (
+          <g key={offset}>
+            <path
+              d={`M150 151 Q${150 + offset} 112 ${150 + offset} 77`}
+              stroke="#ca8a04"
+              strokeWidth="2"
+              strokeLinecap="round"
+              fill="none"
+            />
+            <circle cx={150 + offset} cy="77" r="3" fill="#facc15" />
+          </g>
+        ))}
+      </svg>
+    </div>
+  );
+};
+
 export default function App() {
   const [recipientName, setRecipientName] = useState("Lorrea Ladao");
 
@@ -432,6 +506,8 @@ export default function App() {
   const [selectedTheme, setSelectedTheme] = useState("rose");
   const [copiedLink, setCopiedLink] = useState(false);
   const [showGeneratedCard, setShowGeneratedCard] = useState(false);
+  const [isLily, setIsLily] = useState(false);
+  const [isCardFlipped, setIsCardFlipped] = useState(false);
 
   const cardRef = useRef(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
@@ -450,6 +526,14 @@ export default function App() {
 
   const handleMouseLeave = () => {
     setTilt({ x: 0, y: 0 });
+  };
+
+  const handleCardFlip = () => {
+    setIsCardFlipped((current) => {
+      const next = !current;
+      setIsLily(next);
+      return next;
+    });
   };
 
   const handleCelebrate = () => {
@@ -588,23 +672,51 @@ export default function App() {
           ref={cardRef}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          style={{
-            transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
-            transition: tilt.x === 0 ? "transform 0.5s ease-out" : "none",
+          onClick={handleCardFlip}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              handleCardFlip();
+            }
           }}
-          className="w-full max-w-md bg-white dark:bg-gray-800/90 rounded-3xl sm:rounded-[2.5rem] p-4 sm:p-8 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.06)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-white/80 dark:border-gray-700/50 backdrop-blur-xl flex flex-col items-center justify-center relative my-2 sm:my-4 group cursor-pointer"
+          role="button"
+          tabIndex={0}
+          aria-label={isCardFlipped ? "Show front of birthday card" : "Show back of birthday card"}
+          aria-pressed={isCardFlipped}
+          style={{
+            transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y + (isCardFlipped ? 180 : 0)}deg)`,
+            transition: "transform 0.5s ease-out",
+          }}
+          className="w-full max-w-md min-h-[18rem] bg-white dark:bg-gray-800/90 rounded-3xl sm:rounded-[2.5rem] p-4 sm:p-8 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.06)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-white/80 dark:border-gray-700/50 backdrop-blur-xl flex flex-col items-center justify-center relative my-2 sm:my-4 group cursor-pointer [transform-style:preserve-3d]"
         >
           <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-tr from-pink-100/40 via-transparent to-purple-100/30 dark:from-pink-900/10 dark:to-purple-900/10 pointer-events-none" />
 
-          <div className="relative z-10 transform group-hover:scale-105 transition-transform duration-500 ease-out">
-            <PeonyFlower />
+          <div className="relative z-10 flex h-full w-full flex-col items-center justify-center [backface-visibility:hidden]">
+            <div
+              className="transform cursor-pointer transition-transform duration-500 ease-out group-hover:scale-105"
+              title={isLily ? "Switch to peony" : "Switch to lily"}
+              aria-label={isLily ? "Switch to peony" : "Switch to lily"}
+              onClick={() => setIsLily((current) => !current)}
+            >
+              {isLily ? <LilyFlower /> : <PeonyFlower />}
+            </div>
+
+            <div className="absolute top-6 right-6 text-pink-300 dark:text-pink-400 opacity-60 group-hover:opacity-100 transition-opacity">
+              <Sparkles size={22} />
+            </div>
+            <div className="absolute bottom-6 left-6 text-amber-300 dark:text-amber-400 opacity-60 group-hover:opacity-100 transition-opacity">
+              <Star size={18} />
+            </div>
           </div>
 
-          <div className="absolute top-6 right-6 text-pink-300 dark:text-pink-400 opacity-60 group-hover:opacity-100 transition-opacity">
-            <Sparkles size={22} />
-          </div>
-          <div className="absolute bottom-6 left-6 text-amber-300 dark:text-amber-400 opacity-60 group-hover:opacity-100 transition-opacity">
-            <Star size={18} />
+          <div className="absolute inset-0 z-20 flex rotate-y-180 flex-col items-center justify-center rounded-3xl sm:rounded-[2.5rem] bg-gradient-to-br from-pink-100 via-rose-50 to-amber-50 p-6 text-center text-rose-900 [backface-visibility:hidden] dark:from-pink-950 dark:via-slate-900 dark:to-gray-900 dark:text-pink-100">
+            <Heart size={42} className="mb-4 text-pink-500" fill="currentColor" />
+            <p className="font-serif text-xl italic leading-relaxed">
+              “Every birthday deserves a little magic.”
+            </p>
+            <p className="mt-4 text-xs font-semibold uppercase tracking-[0.2em] text-pink-600 dark:text-pink-300">
+              With love, {senderName || "your loved ones"}
+            </p>
           </div>
         </div>
 
